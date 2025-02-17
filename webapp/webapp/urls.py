@@ -18,12 +18,12 @@ from django.contrib import admin
 from django.urls import path
 from register.views import register_user,verify_email
 from login.views import login_user
-from home.views import home_page
+from user_location.views import user_location_page
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', register_user),
     path('login/', login_user),
-    path("home page/", home_page),
+    path("location/", user_location_page),
     path("", login_user),
     path('verify-email/<uidb64>/<token>/', verify_email, name='verify_email')
 ]

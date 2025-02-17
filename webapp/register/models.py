@@ -34,5 +34,6 @@ class UserAuthentication(models.Model):
             self.password = make_password(self.password)
         super().hash_password(*args, **kwargs)
 
+    # returns the email of the user
     def get_email_field_name(self):
         return 'email'

@@ -7,6 +7,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.urls import reverse
 from django.conf import settings
+from django.contrib.auth.hashers import check_password
+from django.shortcuts import redirect
 
 
 def register_user(request) :  
@@ -16,7 +18,7 @@ def register_user(request) :
         password = request.POST.get('Password')
         re_type_password = request.POST.get('Re-type Password')
         phone_number = request.POST.get('phone')
-
+        hashed_password = UserAuthentication.hash_password(password)
         # Checking if the email already exist in the database or not 
         if UserAuthentication.objects.filter(email=email).exists():
             return HttpResponse("The entered email already exists in the system.", status=400)
@@ -29,7 +31,7 @@ def register_user(request) :
         
         user = UserAuthentication.objects.create(
             email=email,
-            password=password,  
+            password=hashed_password,  
             phone_number=phone_number,
             is_email_verified=False
         )
@@ -56,8 +58,12 @@ def send_verification_email(request, user):
 def verify_email(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        user = UserAuthentication.objects.get(pk=uid)
 
+        user = UserAuthentication.objects.get(pk=uid)
+        # Checking if the user email is already verified or not 
+        if user.is_email_verified:
+            return HttpResponse("Your email is already verified.", status=200)
+        
         if default_token_generator.check_token(user, token):
             if request.method == "POST":
                 user.is_email_verified = True
@@ -70,3 +76,43 @@ def verify_email(request, uidb64, token):
         return HttpResponse("Invalid verification link.", status=400)
 
     return HttpResponse("Invalid or expired token.", status=400)
+
+
+
+def login_user(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        try:
+            user = UserAuthentication.objects.get(email=email)
+        except UserAuthentication.DoesNotExist:
+            return HttpResponse("Invalid email or password.", status=400)
+
+        # Check if the password matches
+        if check_password(password, user.password):
+            # Store user ID in session
+            request.session['user_id'] = user.user_id
+            user.login_count += 1
+            user.save()
+
+            #return redirect('dashboard')  # Change to your dashboard URL
+        else:
+            return HttpResponse("Invalid email or password.", status=400)
+
+    return render(request, 'login.html')
+
+
+
+def login_required(view_func):
+    """Custom login_required decorator."""
+    def wrapper(request, *args, **kwargs):
+        if 'user_id' not in request.session:
+            return redirect('login')  # Redirect to login page
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
+def logout_user(request):
+    request.session.flush()  
+    return redirect('login')
