@@ -16,14 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from register.views import register_user,verify_email
-from login.views import login_user
-from user_location.views import user_location_page
+from user_authentication.views import register_user,verify_email,login_user
+
+from user_location.views import track_location, update_location
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('register/', register_user),
+    path('register/', register_user,name='register'),
     path('login/', login_user),
-    path("location/", user_location_page),
+    path("track/<int:user_id>/", track_location, name="track_location"),
+    path("update-location/", update_location, name="update_location"),
+
     path("", login_user),
     path('verify-email/<uidb64>/<token>/', verify_email, name='verify_email')
 ]

@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('register', '0001_initial'),
+        ('user_authentication', '0001_initial'),
     ]
 
     operations = [
@@ -26,6 +26,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.DeleteModel(
-            name='register',
+            name='user_authentication',
         ),
     ]

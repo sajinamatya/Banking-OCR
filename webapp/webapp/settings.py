@@ -37,8 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'register',
-    'login',
+    'user_authentication',
     'user_location'
 ]
 
@@ -134,3 +133,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'sajinamatya88@gmail.com'  # Replace with your email
 EMAIL_HOST_PASSWORD = 'orzr eddp sfgj mmqh'  # Use App Password if using Gmail
+# Set session expiry time to 30 minutes
+SESSION_COOKIE_AGE = 30 * 60  # 30 minutes in seconds
+
+# Optional: Force session to expire when the user closes the browser
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password
-
 from django.utils.timezone import now
 
 
@@ -29,10 +28,8 @@ class UserAuthentication(models.Model):
         db_table = 'user_authentication_detail'  
 
     # Hashing the user password for safety
-    def hash_password(self, *args, **kwargs):
-        if self.password:
-            self.password = make_password(self.password)
-        super().hash_password(*args, **kwargs)
+    def hash_password(password):
+        return make_password(password)
 
     # returns the email of the user
     def get_email_field_name(self):
