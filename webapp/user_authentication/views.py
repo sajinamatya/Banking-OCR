@@ -1,6 +1,6 @@
 from django.shortcuts import render 
 from django.core.mail import send_mail
-from register.models import UserAuthentication
+from user_authentication.models import UserAuthentication
 from django.http import HttpResponse 
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -96,7 +96,7 @@ def login_user(request):
             user.login_count += 1
             user.save()
 
-            #return redirect('dashboard')  # Change to your dashboard URL
+            return redirect('user_location')  
         else:
             return HttpResponse("Invalid email or password.", status=400)
 

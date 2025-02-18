@@ -1,11 +1,91 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Track Location</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async defer></script>
 </head>
 <body>
-    <h1> THis is home </H1>
+
+    <h2>Location Tracking for {{ user.username }}</h2>
+    <p><strong>City:</strong> {{ user_location.city|default:"Not Available" }}</p>
+    <p><strong>District:</strong> {{ user_location.district|default:"Not Available" }}</p>
+    <p><strong>Province:</strong> {{ user_location.province|default:"Not Available" }}</p>
+    <p><strong>Country:</strong> {{ user_location.country|default:"Not Available" }}</p>
+
+    <div id="map" style="width: 600px; height: 400px;"></div>
+
+    <script>
+        function updateLocation(position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            var user_id = "{{ user.user_id }}";  
+
+            fetch("{% url 'update_location' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: "user_id=" + user_id + "&latitude=" + lat + "&longitude=" + lng
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    document.getElementById("location_details").innerHTML = `
+                        <p><strong>City:</strong> ${data.city || "Not Available"}</p>
+                        <p><strong>District:</strong> ${data.district || "Not Available"}</p>
+                        <p><strong>Province:</strong> ${data.province || "Not Available"}</p>
+                        <p><strong>Country:</strong> ${data.country || "Not Available"}</p>
+                    `;
+                    initMap(lat, lng);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        function initMap(lat = 27.7172, lng = 85.3240) {
+            var map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: lat, lng: lng },
+                zoom: 12
+            });
+
+            new google.maps.Marker({
+                position: { lat: lat, lng: lng },
+                map: map,
+                title: "User Location"
+            });
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(updateLocation);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    </script>
+
+    <div id="location_details"></div>
+    <h2>Confirm Your Location</h2>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <label for="latitude">Latitude:</label>
+        <input type="text" name="latitude" value="{{ latitude }}" required readonly><br>
+
+        <label for="longitude">Longitude:</label>
+        <input type="text" name="longitude" value="{{ longitude }}" required readonly><br>
+
+        <label for="city">City:</label>
+        <input type="text" name="city" value="{{ city }}" required readonly><br>
+
+        <label for="district">District:</label>
+        <input type="text" name="district" value="{{ district }}" required readonly><br>
+
+        <label for="province">Province:</label>
+        <input type="text" name="province" value="{{ province }}" required readonly><br>
+
+        <button type="submit">Save Location</button>
+    </form>
+
 </body>
 </html>
