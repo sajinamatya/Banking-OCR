@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import redirect
+from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
 
 
 def register_user(request) :  
@@ -89,14 +90,17 @@ def login_user(request):
         except UserAuthentication.DoesNotExist:
             return HttpResponse("Invalid email or password.", status=400)
 
-        # Check if the password matches
+        if user.is_email_verified == 0: 
+            return HttpResponse("Your email has not been verified please check your mail ", status=400)
+        
+
         if check_password(password, user.password):
             # Store user ID in session
             request.session['user_id'] = user.user_id
             user.login_count += 1
             user.save()
 
-            return redirect('user_location')  
+            return redirect('track_location')  
         else:
             return HttpResponse("Invalid email or password.", status=400)
 
@@ -116,3 +120,74 @@ def login_required(view_func):
 def logout_user(request):
     request.session.flush()  
     return redirect('login')
+
+
+
+
+
+
+signer = TimestampSigner()
+
+
+def generate_reset_token(user_id):
+    return signer.sign(user_id)
+
+# Validate and extract user ID from token
+def verify_reset_token(token, max_age=1800):  # 30 minutes expiry
+    try:
+        user_id = signer.unsign(token, max_age=max_age)  # Returns user ID if valid
+        return user_id
+    except (BadSignature, SignatureExpired):
+        return None  # Invalid or expired token
+    
+def send_reset_email(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+
+        try:
+            user = UserAuthentication.objects.get(email=email)
+
+            if not user.is_email_verified:
+                return HttpResponse("Email is not verified.", status=400)
+
+            reset_token = generate_reset_token(user.user_id)
+            reset_link = f"http://127.0.0.1:8000/reset-password/{reset_token}/"
+
+            send_mail(
+                subject="Password Reset Request",
+                message=f"Click the link below to reset your password:\n{reset_link}",
+            
+                recipient_list=[email],
+                fail_silently=False,
+            )
+
+            return HttpResponse("Please check your email, password reset link has been sent to your email.")
+        
+        except UserAuthentication.DoesNotExist:
+            return HttpResponse("Email not found.", status=400)
+
+    return render(request, "reset.html")
+
+def reset_password(request, token):
+    user_id = verify_reset_token(token)
+
+    if not user_id:
+        return HttpResponse("Reset link expired or invalid.", status=400)
+
+    if request.method == "POST":
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if new_password != confirm_password:
+            return HttpResponse("Passwords do not match.", status=400)
+
+
+        try:
+            user = UserAuthentication.objects.get(user_id=user_id)
+            user.password = UserAuthentication.hash_password(new_password) 
+            user.save()
+            return HttpResponse("Password has been reset successfully.")
+        except UserAuthentication.DoesNotExist:
+            return HttpResponse("User not found.", status=400)
+
+    return render(request, "password_reset_form.html", {"token": token})
