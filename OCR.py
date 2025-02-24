@@ -5,7 +5,7 @@ import pytesseract # type: ignore
 
 pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
-image_path = "images/3.jpg"
+image_path = "images/33.jpg"
 
 image = cv2.imread(image_path)
 
@@ -55,7 +55,7 @@ def draw_outline(image):
             cv2.rectangle(image, top_left, bottom_right, green, thickness)
 
     # Save the output image
-    output_image_path = "images/text_with_boxes.png"
+    output_image_path = "images/text_with_boxe3223.png"
     cv2.imwrite(output_image_path, image)
 
 draw_outline(image)
