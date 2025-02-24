@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Registration Page</title>
     <style>
         * {
             box-sizing: border-box;
@@ -16,23 +17,25 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
+            min-height: 100vh;
+            background-color: #f3ecec;
+            padding: 20px;
         }
 
         .main-container {
             display: flex;
-            width: 70%;
-            height: 90%;
-            border: 1px solid #ccc;
+            flex-wrap: wrap;
+            width: 90%;
+            max-width: 900px;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: white;
         }
 
         .registerform-section {
             flex: 1;
-            padding: 40px;
+            padding: 30px;
             background: white;
         }
 
@@ -40,6 +43,7 @@
             font-size: 25px;
             margin-bottom: 20px;
             color: #5e35b1;
+            text-align: center;
         }
 
         .registerform-section label {
@@ -53,46 +57,51 @@
         .registerform-section input[type="password"] {
             width: 100%;
             padding: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
             background-color: #f9f9f9;
         }
 
-        .registerform-section input[type="text"]:focus,
-        .registerform-section input[type="password"]:focus {
+        .registerform-section input:focus {
             border-color: #1f48b1;
             outline: none;
         }
 
-        .registerform-section a {
-            color: #1f48b1;
-            text-decoration: none;
-            font-size: 12px;
-        }
-
-        .registerform-section a:hover {
-            text-decoration: underline;
-        }
-
         .registerform-section button {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background-color: #1f48b1;
             color: white;
             border: none;
-            border-radius: 35px;
+            border-radius: 25px;
             font-size: 16px;
             cursor: pointer;
+            transition: background 0.3s ease;
         }
 
         .registerform-section button:hover {
             background-color: #14368a;
         }
 
+        .registerform-section p {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .registerform-section a {
+            color: #1f48b1;
+            text-decoration: none;
+        }
+
+        .registerform-section a:hover {
+            text-decoration: underline;
+        }
+
         .image-section {
             flex: 1;
-            background: linear-gradient(rgba(94, 53, 177, 0.8), rgba(94, 53, 177, 0.8)), url('https://via.placeholder.com/600x400') center/cover;
+            background: linear-gradient(rgba(94, 53, 177, 0.8), rgba(94, 53, 177, 0.8)), 
+                        url('https://via.placeholder.com/600x400') center/cover;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -102,43 +111,51 @@
             padding: 20px;
         }
 
-        .image-section h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
 
-        .image-section p {
-            font-size: 14px;
+            .image-section {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
     <div class="main-container">
-      <div class="image-section">
-        
-    </div>
+        <div class="image-section">
+            <h2>Welcome to Sajilo Ebank!</h2>
+            <p>Fast, secure, and easy banking services.</p>
+        </div>
+
         <div class="registerform-section">
-            <h1>Create an account </h1>
-            <form  method="post">
+            <h1>Create an Account</h1>
+            <form method="post">
                 {% csrf_token %}
                 <label for="email">Enter your email</label>
-                <input type="text" id="email" name="Email" placeholder="Enter your email" required>
+                <input type="text" id="email" name="email" placeholder="Enter your email" required>
 
-                <label for="email">Enter your phone number</label>
+                <label for="phone">Enter your phone number</label>
                 <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
 
                 <label for="password">Enter your password</label>
-                <input type="password" id="password" name="Password" placeholder="Enter your password" required>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
-                <label for="password">re type  password</label>
-                <input type="password" id="password" name="Re-type Password" placeholder="re type your  password" required>
+                <label for="repassword">Re-enter password</label>
+                <input type="password" id="re-password" name="re-password" placeholder="Re-enter your password" required>
 
-                <button type="submit"></button>
+                <button type="submit">Sign Up</button>
 
-                <p>Don't have an account? <a href="">Signup now</a></p>
+                <p>Already have an account? <a href="{% url 'login' %}">Login now</a></p>
+                {% if error %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ error }}
+                   
+                </div>
+                {% endif %}
             </form>
         </div>
-        
     </div>
 </body>
 </html>

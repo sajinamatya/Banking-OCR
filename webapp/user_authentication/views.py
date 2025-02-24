@@ -15,21 +15,21 @@ from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
 def register_user(request) :  
     
     if request.method == "POST":
-        email = request.POST.get('Email')
-        password = request.POST.get('Password')
-        re_type_password = request.POST.get('Re-type Password')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        re_type_password = request.POST.get('re-password')
         phone_number = request.POST.get('phone')
         hashed_password = UserAuthentication.hash_password(password)
         # Checking if the email already exist in the database or not 
         if UserAuthentication.objects.filter(email=email).exists():
-            return HttpResponse("The entered email already exists in the system.", status=400)
+            return render(request, "register.html", {"error": "The entered email already exists in the system."})
         
         if UserAuthentication.objects.filter(phone_number=phone_number).exists():
-            return HttpResponse("The entered phone number is  already exists in the system.", status=400)
+            return render(request, "register.html", {"error": "The entered phone number is  already exists in the system."})
         # Checking if the password field data and re-type password field data matches or not 
         if password != re_type_password:
-            return HttpResponse("Retype password do not match", status=400)
-        
+            return render(request, "register.html", {"error": "Retype password do not match."})
+          
         user = UserAuthentication.objects.create(
             email=email,
             password=hashed_password,  
@@ -88,10 +88,12 @@ def login_user(request):
         try:
             user = UserAuthentication.objects.get(email=email)
         except UserAuthentication.DoesNotExist:
-            return HttpResponse("Invalid email or password.", status=400)
+            return render(request, "login.html", {"error": "Email is invalid!"})
+
 
         if user.is_email_verified == 0: 
-            return HttpResponse("Your email has not been verified please check your mail ", status=400)
+            return render(request, "login.html", {"error": "Please verify your email before logging in."})
+
         
 
         if check_password(password, user.password):
@@ -102,17 +104,19 @@ def login_user(request):
 
             return redirect('track_location')  
         else:
-            return HttpResponse("Invalid email or password.", status=400)
+            return render(request, "login.html", {"error": "Password is incorrect!"})
 
     return render(request, 'login.html')
 
 
+from functools import wraps
 
 def login_required(view_func):
     """Custom login_required decorator."""
+    @wraps(view_func)  # Add this line
     def wrapper(request, *args, **kwargs):
         if 'user_id' not in request.session:
-            return redirect('login')  # Redirect to login page
+            return redirect('login')
         return view_func(request, *args, **kwargs)
     return wrapper
 
@@ -156,7 +160,7 @@ def send_reset_email(request):
             send_mail(
                 subject="Password Reset Request",
                 message=f"Click the link below to reset your password:\n{reset_link}",
-            
+                from_email=settings.EMAIL_HOST_USER ,
                 recipient_list=[email],
                 fail_silently=False,
             )

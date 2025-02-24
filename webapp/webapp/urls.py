@@ -22,7 +22,7 @@ from user_location.views import track_location, update_location
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', register_user,name='register'),
-    path('login/', login_user),
+    path('login/', login_user, name='login'),
     path("track/", track_location, name="track_location"),
     path("update-location/", update_location, name="update_location"),
 
