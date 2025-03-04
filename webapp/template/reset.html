@@ -3,14 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Password Reset</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
-<body>
-    <form method="POST">
-        {% csrf_token %}
-        <label>Email:</label>
-        <input type="email" name="email" required>
-        <button type="submit">Send Reset Link</button>
-    </form>
+<style>
+    .bg-purple {
+        background-color: #6f42c1 ;
+    }
+</style>
+<body class="bg-light">
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow">
+                    <div class="card-header bg-purple text-white text-center">
+                        <h4 class="my-2">
+                            <i class="bi bi-shield-lock me-2"></i>
+                            Password Reset
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="text-muted mb-4">Enter your email address and we'll send you a link to reset your password.</p>
+                        
+                        <form method="POST">
+                            {% csrf_token %}
+                            
+                            <div class="form-floating mb-3 h-75">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                                <label for="email">Email address</label>
+                            </div>
+                            
+                            <div class="d-grid gap-2 w-70 p-3">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-envelope me-2"></i>
+                                     Reset Link
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center py-3">
+                        <a href="{% url 'login' %}" class="text-decoration-none" style="color: #6f42c1;">
+                            <i class="bi bi-arrow-left-circle me-1"></i>
+                            Back to login
+                        </a>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <div class="py-2 px-3 bg-light border rounded-3 d-inline-block shadow-sm" style="border-color: #6f42c1 !important;">
+                        <i class="bi bi-info-circle text-purple me-2"></i>
+                        <small class="text-muted" style="color:#6f42c1 !important;">If you don't receive an email, please check your <span class="text-purple fw-semibold">spam folder</span>.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
