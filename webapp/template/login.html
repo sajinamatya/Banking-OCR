@@ -72,9 +72,11 @@
                         <label for="password" class="form-label">Password:</label>
                         <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
                     </div>
+                    
                     <button type="submit" class="btn btn-primary w-100">Submit</button>
                 </form>
-                <p class="text-center mt-3">Not registered? <a href="{% url 'register' %}" class="text-decoration-none">Create an account</a></p>
+                <p class="text-center mt-3">Not registered yet ? <a href="{% url 'register' %}" class="text-decoration-none">Create an account</a></p>
+                <p class="text-center mt-3">Forgot your password ? <a href="{% url 'send-password-reset' %}" class="text-decoration-none">Reset password</a></p>
                 {% if error %}
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     {{ error }}
