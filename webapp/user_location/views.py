@@ -5,7 +5,7 @@ from user_authentication.models import UserAuthentication
 from .models import UserLocation
 from user_authentication.views import login_required
 
-# OpenStreetMap Nominatim API endpoint
+# OpenStreetMap 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/reverse"
 
 
@@ -17,7 +17,7 @@ def get_location_details(lat, lng):
     if response and 'address' in response:
         address = response['address']
         city = address.get('city', None)
-        district = address.get('suburb', None)  # You can adjust this depending on your region
+        district = address.get('suburb', None)  
         province = address.get('state', None)
         country = address.get('country', None)
         
@@ -56,12 +56,12 @@ def update_location(request):
                 user_location.city = city
                 user_location.district = district
                 user_location.province = province
-                user_location.country = country  # You can store country as well
+                user_location.country = country
                 user_location.save()
 
-                return redirect("location_success")  # Redirect after saving
+                return redirect("location_success")  
 
-    # Pre-fill form with existing data
+  
     context = {
         "latitude": user_location.latitude if user_location else "",
         "longitude": user_location.longitude if user_location else "",
