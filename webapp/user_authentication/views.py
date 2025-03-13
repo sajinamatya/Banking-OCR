@@ -98,27 +98,21 @@ def login_user(request):
 
         if check_password(password, user.password):
             # Store user ID in session
+            
             request.session['user_id'] = user.user_id
+            request.session.modified = True  
+            request.session.save()
             user.login_count += 1
+            print("SESSION DATA:", request.session.items()) 
             user.save()
 
-            return redirect('track_location')  
+            return redirect('document')  
         else:
             return render(request, "login.html", {"error": "Password is incorrect!"})
 
     return render(request, 'login.html')
 
 
-from functools import wraps
-
-def login_required(view_func):
-    """Custom login_required decorator."""
-    @wraps(view_func)  # Add this line
-    def wrapper(request, *args, **kwargs):
-        if 'user_id' not in request.session:
-            return redirect('login')
-        return view_func(request, *args, **kwargs)
-    return wrapper
 
 
 def logout_user(request):
