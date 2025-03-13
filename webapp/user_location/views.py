@@ -1,73 +1,40 @@
-import requests
-from django.shortcuts import render, redirect
+
+from django.shortcuts import render
 from django.http import JsonResponse
-from user_authentication.models import UserAuthentication
-from .models import UserLocation
-from user_authentication.views import login_required
-
-# OpenStreetMap Nominatim API endpoint
-NOMINATIM_URL = "https://nominatim.openstreetmap.org/reverse"
+import requests
 
 
-def get_location_details(lat, lng):
-    """ Fetch city, district, and province from OpenStreetMap Nominatim API. """
-    url = f"{NOMINATIM_URL}?lat={lat}&lon={lng}&format=json"
-    response = requests.get(url).json()
-    
-    if response and 'address' in response:
-        address = response['address']
-        city = address.get('city', None)
-        district = address.get('suburb', None)  # You can adjust this depending on your region
-        province = address.get('state', None)
-        country = address.get('country', None)
-        
-        return city, district, province, country
-    return None, None, None, None
+def get_location_details(request):
+    if request.session.get("user_id") is None:
+        return JsonResponse({"error": "User not authenticated"}, status=401)
+    latitude = request.GET.get("latitude")
+    longitude = request.GET.get("longitude")
 
-@login_required
-def track_location(request):
-    """ Fetch user's location details """
+    # Debugging: Log the received latitude and longitude values
+    print(f"Received latitude: {latitude}, longitude: {longitude}")
+
     try:
-        user_id = request.session.get('user_id')
-        user = UserAuthentication.objects.get(pk=user_id)
-        user_location = UserLocation.objects.filter(user=user).first()
-        return render(request, "location.html", {"user_location": user_location, "user": user})
-    except UserAuthentication.DoesNotExist:
-        return JsonResponse({"error": "User not found"}, status=404)
+        latitude = float(latitude)
+        longitude = float(longitude)
+    except (TypeError, ValueError):
+        return JsonResponse({"error": "Invalid latitude or longitude"}, status=400)
 
-@login_required
-def update_location(request):
-    user = request.session.get('user_id')
-    user_location = UserLocation.objects.filter(user=user).first()
+    if latitude and longitude:
+        # Use a Reverse Geocoding API to fetch details
+        api_url = f"https://nominatim.openstreetmap.org/reverse?format=json&lat={latitude}&lon={longitude}"
+        response = requests.get(api_url).json()
 
-    if request.method == "POST":
-        lat = request.POST.get("latitude")
-        lng = request.POST.get("longitude")
+        if response:
+            location_data = {
+                "city": response.get("address", {}).get("city", "Unknown"),
+                "district": response.get("address", {}).get("county", "Unknown"),
+                "province": response.get("address", {}).get("state", "Unknown"),
+                "country": response.get("address", {}).get("country", "Unknown"),
+            }
+            return JsonResponse(location_data)
 
-        if lat and lng:
-            city, district, province, country = get_location_details(lat, lng)
+    return JsonResponse({"error": "Could not fetch location"}, status=400)
 
-            if city and district and province:
-                if not user_location:
-                    user_location = UserLocation(user=user)
 
-                user_location.latitude = lat
-                user_location.longitude = lng
-                user_location.city = city
-                user_location.district = district
-                user_location.province = province
-                user_location.country = country  # You can store country as well
-                user_location.save()
-
-                return redirect("location_success")  # Redirect after saving
-
-    # Pre-fill form with existing data
-    context = {
-        "latitude": user_location.latitude if user_location else "",
-        "longitude": user_location.longitude if user_location else "",
-        "city": user_location.city if user_location else "",
-        "district": user_location.district if user_location else "",
-        "province": user_location.province if user_location else "",
-        "country": user_location.country if user_location else "",
-    }
-    return render(request, "location.html", context)
+def location_form(request):
+    return render(request, "location.html")

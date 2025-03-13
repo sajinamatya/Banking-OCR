@@ -24,6 +24,7 @@ SECRET_KEY = 'django-insecure-&s3sf3#^y*8(g$s+v_!asrwf((8j9$g#)gs7dxqsi^_#&40q)k
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+LOGIN_URL = '/login/'
 
 ALLOWED_HOSTS = []
 
@@ -38,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user_authentication',
-    'user_location'
+    'user_location',
+    'Document_upload',
 ]
 
 MIDDLEWARE = [
@@ -133,8 +135,17 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'sajinamatya88@gmail.com'  # Replace with your email
 EMAIL_HOST_PASSWORD = 'orzr eddp sfgj mmqh'  # Use App Password if using Gmail
-# Set session expiry time to 30 minutes
-SESSION_COOKIE_AGE = 30 * 60  # 30 minutes in seconds
+# Use database-backed sessions
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
-# Optional: Force session to expire when the user closes the browser
+# Set session expiry to browser close
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Optionally, set a session timeout (e.g., 30 minutes)
+SESSION_COOKIE_AGE = 1800  # 30 minutes
+
+# Ensure the session is saved on every request
+SESSION_SAVE_EVERY_REQUEST = True
+
+
+

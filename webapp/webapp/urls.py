@@ -16,18 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from user_authentication.views import register_user,verify_email,login_user,send_reset_email,reset_password
-
-from user_location.views import track_location, update_location
+from user_authentication.views import register_user,verify_email,login_user,send_reset_email,reset_password,logout_user
+from user_location.views import get_location_details
+from Document_upload.views import document_upload
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', register_user,name='register'),
     path('login/', login_user, name='login'),
-    path("track/", track_location, name="track_location"),
-    path("update-location/", update_location, name="update_location"),
-
+    path("document/", document_upload, name="document"),
+    path("get-location-details/", get_location_details, name="get_location_details"),
+    path('logout/', logout_user, name='logout'),
     path("", login_user),
-    path('verify-email/<uidb64>/<token>/', verify_email, name='verify_email'),
+    path('verify-email/<uidb64>/<token>/',verify_email, name='verify_email'),
     path("send-password-reset/", send_reset_email, name="send-password-reset"),
     path("reset-password/<str:token>/", reset_password, name="reset-password")
+    
+   
 ]

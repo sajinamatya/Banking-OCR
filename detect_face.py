@@ -13,5 +13,5 @@ print(faces)
 # Extract and save faces
 for i, face in enumerate(faces):
     x, y, w, h = face['box']
-    face_image = image[y:y+h, x:x+w]
+    face_image = image[y:y+h+3, x:x+w+3]
     cv2.imwrite(f'extracted_face_{i}.jpg', face_image)

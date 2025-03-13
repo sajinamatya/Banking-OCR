@@ -3,96 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Track Location</title>
-    <!-- Include Leaflet CSS for OpenStreetMap -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <title>User Location Auto-Fill</title>
 </head>
 <body>
-
-    <h2>Location Tracking for {{ user.username }}</h2>
-    <p><strong>City:</strong> {{ user_location.city|default:"Not Available" }}</p>
-    <p><strong>District:</strong> {{ user_location.district|default:"Not Available" }}</p>
-    <p><strong>Province:</strong> {{ user_location.province|default:"Not Available" }}</p>
-    <p><strong>Country:</strong> {{ user_location.country|default:"Not Available" }}</p>
-
-    <div id="map" style="width: 600px; height: 400px;"></div>
-
-    <script>
-        // Function to update location on the server
-        function updateLocation(position) {
-            var lat = position.coords.latitude;
-            var lng = position.coords.longitude;
-            var user_id = "{{ user.user_id }}";  
-
-            fetch("{% url 'update_location' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: "user_id=" + user_id + "&latitude=" + lat + "&longitude=" + lng
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    document.getElementById("location_details").innerHTML = `
-                        <p><strong>City:</strong> ${data.city || "Not Available"}</p>
-                        <p><strong>District:</strong> ${data.district || "Not Available"}</p>
-                        <p><strong>Province:</strong> ${data.province || "Not Available"}</p>
-                        <p><strong>Country:</strong> ${data.country || "Not Available"}</p>
-                    `;
-                    initMap(lat, lng);
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        }
-
-        // Function to initialize the OpenStreetMap with Leaflet
-        function initMap(lat = 27.7172, lng = 85.3240) {
-            var map = L.map('map').setView([lat, lng], 12);
-
-            // Add OpenStreetMap tile layer
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-
-            // Add a marker to the map
-            L.marker([lat, lng]).addTo(map)
-                .bindPopup("User Location")
-                .openPopup();
-        }
-
-        // Watch user's location
-        if (navigator.geolocation) {
-            navigator.geolocation.watchPosition(updateLocation);
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    </script>
-
-    <div id="location_details"></div>
-    <h2>Confirm Your Location</h2>
-    <form method="POST">
+    <h2>Location Auto-Fill Form</h2>
+    
+    <form method="post">
         {% csrf_token %}
         
         <label for="latitude">Latitude:</label>
-        <input type="text" name="latitude" value="{{ latitude }}" required readonly><br>
+        <input type="text" id="latitude" name="latitude" readonly><br>
 
         <label for="longitude">Longitude:</label>
-        <input type="text" name="longitude" value="{{ longitude }}" required readonly><br>
+        <input type="text" id="longitude" name="longitude" readonly><br>
 
         <label for="city">City:</label>
-        <input type="text" name="city" value="{{ city }}" required readonly><br>
+        <input type="text" id="city" name="city" readonly><br>
 
         <label for="district">District:</label>
-        <input type="text" name="district" value="{{ district }}" required readonly><br>
+        <input type="text" id="district" name="district" readonly><br>
 
         <label for="province">Province:</label>
-        <input type="text" name="province" value="{{ province }}" required readonly><br>
+        <input type="text" id="province" name="province" readonly><br>
 
-        <button type="submit">Save Location</button>
+        <label for="country">Country:</label>
+        <input type="text" id="country" name="country" readonly><br>
+
+        <button type="submit">Submit</button>
     </form>
 
+    <button id="trackLocationBtn">Track Location</button>
+
+    <script>
+        function updateLocation(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            document.getElementById("latitude").value = latitude;
+            document.getElementById("longitude").value = longitude;
+
+            // Send the coordinates to Django
+            fetch(`/get-location-details/?latitude=${latitude}&longitude=${longitude}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("city").value = data.city || "Unknown";
+                    document.getElementById("district").value = data.district || "Unknown";
+                    document.getElementById("province").value = data.province || "Unknown";
+                    document.getElementById("country").value = data.country || "Unknown";
+                })
+                .catch(error => console.error("Error fetching location data:", error));
+        }
+
+        document.getElementById("trackLocationBtn").addEventListener("click", function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(updateLocation, function (error) {
+                    alert("Location access denied or unavailable.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        });
+    </script>
 </body>
 </html>

@@ -13,5 +13,4 @@ class UserLocation(models.Model):
     timestamp = models.DateTimeField(auto_now=True)
     
     class Meta:
-        
         db_table = 'user_location_detail' 
