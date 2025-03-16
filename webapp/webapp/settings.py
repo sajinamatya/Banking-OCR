@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user_authentication',
     'user_location',
-    'Document_upload',
+    'Document_upload'
+    
 ]
 
 MIDDLEWARE = [

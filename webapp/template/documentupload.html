@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -5,74 +6,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://use.fontawesome.com/fe459689b4.js"></script>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <title>Document Upload</title>
-  </head>
-  <body>
-    <h2>Upload Your Documents</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="Front-citizenship">
-            <h1 class="upload-icon">
-                <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
-            </h1>
-            <input
-                class="file-upload-front"
-                type="file"
-                name="front_side_document"
-                onchange="previewImage(event, 'front-preview')"
-                accept="image/*"
-                required
-            />
-            <div id="front-preview" class="image-preview"></div>
-        </div>
-
-        <div class="back-citizenship">
-            <h1 class="upload-icon">
-                <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
-            </h1>
-            <input
-                class="file-upload-back"
-                type="file"
-                name="back_side_document"
-                onchange="previewImage(event, 'back-preview')"
-                accept="image/*"
-                required
-            />
-            <div id="back-preview" class="image-preview"></div>
-        </div>
-
-        <button type="submit">Upload</button>
-    </form>
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Logout</button>
-    </form>
-    <script>
-        function previewImage(event, previewId) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const preview = document.getElementById(previewId);
-                preview.style.backgroundImage = `url(${reader.result})`;
-                preview.style.display = 'block';
-            }
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    </script>
-  </body>
-  <style>
-    .Front-citizenship, .back-citizenship {
+    <style>
+      .citizenship {
         opacity: 0.75;
         height: 250px;
-        width: 250px;
+        width: 100%;
         position: relative;
         overflow: hidden;
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
-        box-shadow: 0 8px 6px -6px black;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         margin-bottom: 20px;
-    }
-    .file-upload-front, .file-upload-back {
+      }
+      .file-upload {
         opacity: 0;
         height: 100%;
         width: 100%;
@@ -80,9 +32,9 @@
         position: absolute;
         top: 0;
         left: 0;
-    }
-    .upload-icon {
-        position: absolute;
+      }
+      .upload-icon {
+       
         top: 45%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -91,17 +43,141 @@
         color: #ccc;
         -webkit-text-stroke-width: 2px;
         -webkit-text-stroke-color: #bbb;
-    }
-    .Front-citizenship:hover .upload-icon, .back-citizenship:hover .upload-icon {
-        opacity: 1;
-    }
-    .image-preview {
+      }
+     
+    
+      .image-preview {
         height: 100%;
         width: 100%;
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
         display: none;
-    }
-  </style>
+      }
+      .nav-link {
+        color: black !important;
+      }
+      .nav-link:hover {
+        background-color: #6b8bab;
+        border-radius: 5px;
+      }
+      .bg-purple {
+        background-color: #6f42c1;
+      }
+      .navbar-brand{
+     color: rgb(255, 255, 255) !important;
+     font-size: x-large
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-purple">
+      <a class="navbar-brand" href="#">Sajilo E-Bank</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item mr-5">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item mr-5">
+            <a class="nav-link" href="#">Location</a>
+          </li>
+          <li class="nav-item mr-5">
+            <a class="nav-link" href="#">Document Upload</a>
+          </li>
+          <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}" class="form-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <h2 class="text-center mb-4">Upload Your Documents</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="card mb-4 mx-auto" style="max-width: 500px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);border: 1px solid #ccc;
+            border-radius: 10px;">
+          <div class="card-body text-center">
+            <h5 class="card-title">Front Side</h5>
+            <div class="citizenship position-relative">
+              <h1 class="upload-icon">
+                <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+              </h1>
+              <input
+                class="file-upload"
+                type="file"
+                name="front_side_document"
+                onchange="previewImage(event, 'front-preview')"
+                accept="image/*"
+                required
+              />
+              <div id="front-preview" class="image-preview"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card mb-4 mx-auto" style="max-width: 500px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);border: 1px solid #ccc;
+            border-radius: 10px;">
+          <div class="card-body text-center">
+            <h5 class="card-title">Back Side</h5>
+            <div class="citizenship position-relative">
+              <h1 class="upload-icon">
+                <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+              </h1>
+              <input
+                class="file-upload"
+                type="file"
+                name="back_side_document"
+                onchange="previewImage(event, 'back-preview')"
+                accept="image/*"
+                required
+              />
+              <div id="back-preview" class="image-preview"></div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Upload</button>
+        </div>
+      </form>
+      {% if front_result_path %}
+      <h3 class="mt-5">Front Side Result</h3>
+      <img src="{% static front_result_path %}" alt="Front Side Result" class="img-fluid">
+      {% endif %}
+
+      {% if back_result_path %}
+      <h3 class="mt-5">Back Side Result</h3>
+      <img src="{% static back_result_path %}" alt="Back Side Result" class="img-fluid">
+      {% endif %}
+    </div>
+
+    <script>
+      function previewImage(event, previewId) {
+        const reader = new FileReader();
+        reader.onload = function () {
+          const preview = document.getElementById(previewId);
+          preview.style.backgroundImage = `url(${reader.result})`;
+          preview.style.display = "block";
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
 </html>
