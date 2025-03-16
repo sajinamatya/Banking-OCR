@@ -37,12 +37,12 @@ def train_yolo_model(data_path, model_path='yolov8n.pt', epochs=50, imgsize=640,
 
 if __name__ == "__main__":
     
-    data_path = "E:/Sajilo E-bank/dataset/data.yaml"  
-    model_path = "yolov8n.pt"  
+    data_path = "E:/Sajilo E-bank/dataset-backside/data.yaml"  
+    model_path = "yolov8s.pt"  
     epochs = 50  # epochs for training
     imgsz = 640  # image size for training
     batch_size = 8  #  batch size for training
-    export_dir = "E:/Sajilo E-bank/models"  
+    
 
     
-    train_yolo_model(data_path, model_path, epochs, imgsz, batch_size, export_dir)
+    train_yolo_model(data_path, model_path, epochs, imgsz, batch_size)

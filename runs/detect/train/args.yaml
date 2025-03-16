@@ -1,7 +1,7 @@
 task: detect
 mode: train
-model: yolov8n.pt
-data: E:/Sajilo E-bank/dataset/data.yaml
+model: yolov8s.pt
+data: E:/Sajilo E-bank/dataset-backside/data.yaml
 epochs: 50
 time: null
 patience: 100

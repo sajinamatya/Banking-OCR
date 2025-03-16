@@ -3,12 +3,12 @@ train: ../train/images
 val: ../train/images
 
 
-nc: 4
-names: ['Printed_logo', 'Silver_patch', 'Stamped_logo', 'printed-stamped-silver_patch']
+nc: 5
+names: ['Printed_logo', 'Silver_patch', 'Stamped_logo', 'citizenship title', 'printed-stamped-silver_patch']
 
 roboflow:
-  workspace: sonam-workspace
-  project: frontdataset
-  version: 1
+  workspace: sajinamatya
+  project: frontdataset-h7jol
+  version: 2
   license: CC BY 4.0
-  url: https://universe.roboflow.com/sonam-workspace/frontdataset/dataset/1
+  url: https://app.roboflow.com/sajinamatya/frontdataset-h7jol/2
