@@ -1,6 +1,6 @@
 # Sajilo Ebank
-## Automating the process of  opening the bank account through implementation of form automation using OCR, Document identification, user current location tracking
-## Implemented facial recognition for KYC verification, but the system's accuracy is low due to the facial character difference between the image embedding of the citizenship photo and real time photo of user and proper enhancement is in progress 
+#### Automating the process of  opening the bank account through implementation of form automation using OCR, Document identification, user current location tracking
+#### Implemented facial recognition for KYC verification, but the system's accuracy is low due to the facial character difference between the image embedding of the citizenship photo and real time photo of user and proper enhancement is in progress 
 ![image](https://github.com/user-attachments/assets/510ab582-82d2-429f-bad3-7c1a89bf0e73)
 ![image](https://github.com/user-attachments/assets/f25ce422-d3d1-45de-99c7-14be32bec7c2)
 ![image](https://github.com/user-attachments/assets/53f47be8-9f93-4001-9e22-37300ce520cf)
