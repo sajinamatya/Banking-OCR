@@ -10,14 +10,26 @@
 #### User location tracking : Openstreetmap API
 #### Facial recognition and liveness detection : Opencv, mediapipe and FaceNet
 
-
+## Login Page 
 ![image](https://github.com/user-attachments/assets/510ab582-82d2-429f-bad3-7c1a89bf0e73)
+
+## Sign Up Page 
 ![image](https://github.com/user-attachments/assets/f25ce422-d3d1-45de-99c7-14be32bec7c2)
+
+## Document Upload page 
 ![image](https://github.com/user-attachments/assets/53f47be8-9f93-4001-9e22-37300ce520cf)
+
+##  User location track page 
 ![image](https://github.com/user-attachments/assets/1ffd911b-78d1-43e8-9eb4-4711a9242f7c)
+
+## User detail form page 
 ![image](https://github.com/user-attachments/assets/3c9c2460-ce20-4d13-a625-165d7d832b7c)
+
+## Admin Dashboard  
 ![image](https://github.com/user-attachments/assets/4b9f3727-fb8a-4887-8de8-4e7829de407f)
+
 ![image](https://github.com/user-attachments/assets/455940d6-6ebe-44e6-8d91-256025d11308)
+
 ![image](https://github.com/user-attachments/assets/07f39ddf-7c1e-409a-81de-390c1ee3efbe)
 
 
