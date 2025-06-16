@@ -2,7 +2,7 @@
 #### Automating the process of  opening the bank account through implementation of form automation using OCR, Document identification, user current location tracking
 #### Implemented facial recognition for KYC verification, but the system's accuracy is low due to the facial character difference between the image embedding of the citizenship photo and real time photo of user and proper enhancement is in progress 
 ## Tools and technology used: 
-#### Frontend : Html css, Bootstrap and  javascript 
+#### Frontend : Html,css, Bootstrap and  javascript 
 #### Backend : Python and Django
 #### Database : MYSQL, MYSQL workbench(database design) 
 #### Document identification : Fine tuned the custom frontside and backside citizenship data using YOLOvs
