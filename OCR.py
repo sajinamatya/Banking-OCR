@@ -1,20 +1,27 @@
-import cv2 # type: ignore
-from pytesseract import Output # type: ignore
-import numpy as np # type: ignore
-import pytesseract # type: ignore
+# Importing necessary modules 
+import cv2 
+from pytesseract import Output 
+import numpy as np 
+import pytesseract 
 
+# Path for the pytesseract engine file 
 pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
+# Testing image path 
 image_path = "images/3.jpg"
 
+# Loading the test image using open cv 
 image = cv2.imread(image_path)
 
+# Gray scale conversion 
 def grayscale(image):
    """Converts an image to grayscale.
    """
    return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 grayscale_image = grayscale(image)
 
+
+# removing the noise from the images 
 def denoise(grayscale_image):
    """Reduces noise in the image using a median blur filter.
    """
@@ -22,7 +29,7 @@ def denoise(grayscale_image):
 
 image_denoise = denoise(grayscale_image)
 
-
+# Sharpening the image  for better acuracy 
 def sharpen(image):
    """Sharpens the image using a Laplacian filter.
    """
