@@ -1,3 +1,4 @@
+# importing the MTCNN for face detection and opencv for working with image data 
 from mtcnn import MTCNN
 import cv2
 
@@ -10,7 +11,7 @@ image = cv2.imread('images/2.png')
 # Detect faces
 faces = detector.detect_faces(image)
 print(faces)
-# Extract and save faces
+# Extract the face from the document and save the face images 
 for i, face in enumerate(faces):
     x, y, w, h = face['box']
     face_image = image[y:y+h+3, x:x+w+3]
