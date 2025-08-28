@@ -8,7 +8,7 @@
 #### Document identification : Fine tuned the custom frontside and backside citizenship data using YOLOvs
 #### OCR : pytesseract and YOLO for prediction of the correct field bounding box
 #### User location tracking : Openstreetmap API
-#### Facial recognition and liveness detection : Opencv, mediapipe and FaceNet
+#### Facial recognition and liveness detection : Opencv, mediapipe and FaceNet.
 
 ## Login Page 
 ![image](https://github.com/user-attachments/assets/510ab582-82d2-429f-bad3-7c1a89bf0e73)
